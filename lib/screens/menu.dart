@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_list/screens/shoplist_form.dart';
+import 'package:shopping_list/widgets/left_drawer.dart';
+// TODO: Impor halaman ShopFormPage jika sudah dibuat
+
 
 class MyHomePage extends StatelessWidget {
       MyHomePage({Key? key}) : super(key: key);
   final List<ShopItem> items = [
-    ShopItem("Lihat Produk", Icons.checklist),
-    ShopItem("Tambah Produk", Icons.add_shopping_cart),
-    ShopItem("Logout", Icons.logout),
+    ShopItem("Lihat Item", Icons.checklist, Colors.black),
+    ShopItem("Tambah Item", Icons.add_shopping_cart, Colors.blue),
+    ShopItem("Logout", Icons.logout, Colors.purple),
     ];
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -25,7 +29,10 @@ class MyHomePage extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.indigo,
+        foregroundColor: Colors.white,
       ),
+      
+      drawer: const LeftDrawer(),
       body: SingleChildScrollView(
         // Widget wrapper yang dapat discroll
         child: Padding(
@@ -70,8 +77,9 @@ class MyHomePage extends StatelessWidget {
 class ShopItem {
   final String name;
   final IconData icon;
+  final Color color;
 
-  ShopItem(this.name, this.icon);
+  ShopItem(this.name, this.icon, this.color);
 }
 
 class ShopCard extends StatelessWidget {
@@ -82,7 +90,7 @@ class ShopCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.indigo,
+      color: item.color,
       child: InkWell(
         // Area responsive terhadap sentuhan
         onTap: () {
@@ -90,7 +98,15 @@ class ShopCard extends StatelessWidget {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(
-                content: Text("Kamu telah menekan tombol ${item.name}!")));
+                content: Text("Kamu telah menekan tombol ${item.name}!"), backgroundColor: item.color));
+                // Navigate ke route yang sesuai (tergantung jenis tombol)
+              if (item.name == "Tambah Item") {
+                Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ShopFormPage(),
+                ));
+              }
         },
         child: Container(
           // Container untuk menyimpan Icon dan Text
